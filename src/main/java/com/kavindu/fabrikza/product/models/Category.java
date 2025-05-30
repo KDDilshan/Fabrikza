@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
+@Table(name = "category")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -16,8 +17,12 @@ public class Category {
     @GeneratedValue
     private int id;
 
+    @Column(nullable = false)
     private String name;
 
-    @OneToMany
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Product> products;
 }
