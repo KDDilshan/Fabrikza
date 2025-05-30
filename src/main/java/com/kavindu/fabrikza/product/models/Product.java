@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "product")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,17 +36,6 @@ public class Product {
     @Column(length = 255)
     private String manufacturer;
 
-    @Column(length = 255)
-    private String imageName;
-
-    private Double discountPercentage;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date discountStartDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date discountEndDate;
-
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
@@ -55,25 +45,14 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_at;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductSize> sizes;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductColor> colors;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> images;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<ProductVariants> productVariants;
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_tags",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<Tag> tags;
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<ProductImage> productImages;
+
 }
