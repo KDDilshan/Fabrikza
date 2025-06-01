@@ -1,20 +1,26 @@
 package com.kavindu.fabrikza.product.dtos.Request;
 
+import com.kavindu.fabrikza.product.models.Category;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AddProductDto {
     private String name;
     private String description;
-    private double price;
-    private String manufacture;
-    private Double discountPercentage;
-    private String productSize;
-    private int sizeQuantity;
-    private String Color;
+    private Double price;
+    private String manufacturer;
+    private Category category;
+    private List<ProductColorDTO> colors;
+
 
 }
+
+
