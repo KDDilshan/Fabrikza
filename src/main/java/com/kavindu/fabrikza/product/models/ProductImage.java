@@ -19,11 +19,11 @@ public class ProductImage {
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "color_id", insertable = false, updatable = false)
+    @JoinColumn(name = "color_id")
     private Color color;
 
 }
