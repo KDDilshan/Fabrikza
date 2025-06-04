@@ -71,4 +71,19 @@ public class UserProductService {
         }
 
     }
+
+    public List<ProductListResponseDTO> OrderByName(String order) {
+        try {
+            Sort sort = order.equalsIgnoreCase("asc")
+                    ? Sort.by(Sort.Order.asc("name"))
+                    : Sort.by(Sort.Order.desc("name"));
+            List<Product> products = productRepository.findAll(sort);
+            return products.stream()
+                    .map(productMapper::toNewDto)
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
 }
