@@ -56,37 +56,6 @@ public class UserProductService {
         }
     }
 
-    public List<ProductListResponseDTO> orderByPrice(String order) {
-        try {
-            Sort sort = order.equalsIgnoreCase("asc")
-                    ? Sort.by(Sort.Order.asc("price"))
-                    : Sort.by(Sort.Order.desc("price"));
-            List<Product> products = productRepository.findAll(sort);
-            return products.stream()
-                    .map(productMapper::toNewDto)
-                    .collect(Collectors.toList());
-        }catch (Exception e){
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-
-    }
-
-    public List<ProductListResponseDTO> OrderByName(String order) {
-        try {
-            Sort sort = order.equalsIgnoreCase("asc")
-                    ? Sort.by(Sort.Order.asc("name"))
-                    : Sort.by(Sort.Order.desc("name"));
-            List<Product> products = productRepository.findAll(sort);
-            return products.stream()
-                    .map(productMapper::toNewDto)
-                    .collect(Collectors.toList());
-        }catch (Exception e){
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
     public List<ProductListResponseDTO> sortProducts(String sortBy, String sortDir) {
         try {
             Sort sort = getSort(sortBy, sortDir);
