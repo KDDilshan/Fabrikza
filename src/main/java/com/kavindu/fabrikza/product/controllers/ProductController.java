@@ -92,6 +92,16 @@ public class ProductController {
 
     }
 
+    @GetMapping("/sort")
+    public ResponseEntity<List<ProductListResponseDTO>> sortProducts(
+            @RequestParam(required = false,defaultValue = "id") String sortBy,
+            @RequestParam(required = false,defaultValue = "asc") String sortDir) {
+
+        List<ProductListResponseDTO> sortedProducts = userProductService.sortProducts(sortBy, sortDir);
+        return ResponseEntity.ok(sortedProducts);
+    }
+
+
 
 
 
