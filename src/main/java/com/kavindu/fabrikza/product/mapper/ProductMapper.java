@@ -2,6 +2,7 @@ package com.kavindu.fabrikza.product.mapper;
 
 import com.kavindu.fabrikza.product.dtos.Request.ProductImageDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductColorResponseDTO;
+import com.kavindu.fabrikza.product.dtos.Response.ProductListResponseDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductResponseDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductVariantResponseDTO;
 import com.kavindu.fabrikza.product.models.Color;
@@ -9,6 +10,7 @@ import com.kavindu.fabrikza.product.models.Product;
 import com.kavindu.fabrikza.product.models.ProductImage;
 import com.kavindu.fabrikza.product.models.ProductVariants;
 import com.kavindu.fabrikza.product.repositories.ProductImageRepository;
+import com.kavindu.fabrikza.product.repositories.ProductRepository;
 import com.kavindu.fabrikza.product.repositories.ProductVariantsRepository;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +22,12 @@ public class ProductMapper {
 
     private final ProductImageRepository productImageRepository;
     private final ProductVariantsRepository productVariantsRepository;
+    private final ProductRepository productRepository;
 
-    public ProductMapper(ProductImageRepository productImageRepository, ProductVariantsRepository productVariantsRepository) {
+    public ProductMapper(ProductImageRepository productImageRepository, ProductVariantsRepository productVariantsRepository, ProductRepository productRepository) {
         this.productImageRepository = productImageRepository;
         this.productVariantsRepository = productVariantsRepository;
+        this.productRepository = productRepository;
     }
 
     public ProductResponseDTO toResponseDTO(Product product) {
@@ -77,6 +81,22 @@ public class ProductMapper {
         }
 
         dto.setColors(colors);
+        return dto;
+    }
+
+
+    public ProductListResponseDTO toNewDto(Product product){
+        ProductListResponseDTO dto = new ProductListResponseDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setCategoryName(product.getCategory().getName());
+
+        List<ProductImage> images=productImageRepository.findByProduct(product);
+        if(!images.isEmpty()){
+            dto.setThumbnail(images.get(0).getUrl());
+        }
+
         return dto;
     }
 }
