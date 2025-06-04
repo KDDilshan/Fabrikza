@@ -79,19 +79,6 @@ public class ProductController {
     }
 
 
-    @GetMapping("/orderPrice")
-    public ResponseEntity<List<ProductListResponseDTO>> getProductsByPrice(@RequestParam(defaultValue = "asc")String order){
-        List<ProductListResponseDTO> productListResponseDTOS=userProductService.orderByPrice(order);
-        return ResponseEntity.ok(productListResponseDTOS);
-    }
-
-    @GetMapping("/ordername")
-    public ResponseEntity<List<ProductListResponseDTO>> getProductsByName(@RequestParam(defaultValue = "asc")String order){
-        List<ProductListResponseDTO> productListResponseDTOS=userProductService.OrderByName(order);
-        return ResponseEntity.ok(productListResponseDTOS);
-
-    }
-
     @GetMapping("/sort")
     public ResponseEntity<List<ProductListResponseDTO>> sortProducts(
             @RequestParam(required = false,defaultValue = "id") String sortBy,
