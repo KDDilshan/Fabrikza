@@ -86,4 +86,28 @@ public class UserProductService {
             return Collections.emptyList();
         }
     }
+
+    public List<ProductListResponseDTO> sortProducts(String sortBy, String sortDir) {
+        try {
+            Sort sort = getSort(sortBy, sortDir);
+            List<Product> products = productRepository.findAll(sort);
+
+            return products.stream()
+                    .map(productMapper::toNewDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    private Sort getSort(String sortBy, String sortDir) {
+        String sortField = (sortBy == null || sortBy.isBlank()) ? "id" : sortBy;
+        Sort.Direction direction = (sortDir == null || sortDir.isBlank() || sortDir.equalsIgnoreCase("asc"))
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+
+        return Sort.by(direction, sortField);
+    }
+
 }
