@@ -6,10 +6,12 @@ import com.kavindu.fabrikza.product.mapper.ProductMapper;
 import com.kavindu.fabrikza.product.models.Product;
 import com.kavindu.fabrikza.product.repositories.*;
 import org.springframework.data.domain.Sort;
+import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,4 +81,9 @@ public class UserProductService {
         return Sort.by(direction, sortField);
     }
 
+    public ProductResponseDTO getProductById(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ExpressionException("Product not found with id: " + id));
+        return productMapper.toResponseDTO(product);
+    }
 }
