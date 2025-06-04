@@ -68,6 +68,12 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable UUID id) {
+        ProductResponseDTO dto = userProductService.getProductById(id);
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<ProductListResponseDTO>> SearchProducts(
             @RequestParam(required = false) String query,
