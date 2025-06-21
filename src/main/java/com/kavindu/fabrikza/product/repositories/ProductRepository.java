@@ -1,5 +1,6 @@
 package com.kavindu.fabrikza.product.repositories;
 
+import com.kavindu.fabrikza.Authentication.models.AppUser;
 import com.kavindu.fabrikza.product.models.Category;
 import com.kavindu.fabrikza.product.models.Product;
 import org.springframework.data.domain.Sort;
@@ -18,6 +19,7 @@ public interface ProductRepository  extends JpaRepository<Product, UUID> {
     List<Product> findByManufacturerIgnoreCase(String manufacturer);
     List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
     List<Product> findAll(Sort sort);
+    List<Product> findByCreatedBy(AppUser user);
 
 
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%'))")
