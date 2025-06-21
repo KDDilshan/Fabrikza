@@ -1,5 +1,6 @@
 package com.kavindu.fabrikza.product.models;
 
+import com.kavindu.fabrikza.Authentication.models.AppUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +49,10 @@ public class Product {
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = true)
+    private AppUser createdBy;
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ProductVariants> productVariants;
