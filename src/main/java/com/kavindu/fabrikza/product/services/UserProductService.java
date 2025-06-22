@@ -1,12 +1,16 @@
 package com.kavindu.fabrikza.product.services;
 
+import com.kavindu.fabrikza.product.dtos.Response.ProductDetailDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductListResponseDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductResponseDTO;
+import com.kavindu.fabrikza.product.dtos.Response.ProductVariantsDTO;
 import com.kavindu.fabrikza.product.mapper.ProductMapper;
 import com.kavindu.fabrikza.product.models.Product;
+import com.kavindu.fabrikza.product.models.ProductImage;
 import com.kavindu.fabrikza.product.repositories.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.expression.ExpressionException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -84,6 +88,9 @@ public class UserProductService {
     public ProductResponseDTO getProductById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ExpressionException("Product not found with id: " + id));
-        return productMapper.toResponseDTO(product);
+
+        ProductResponseDTO dto = productMapper.toResponseDTO(product);
+        return dto;
+
     }
 }

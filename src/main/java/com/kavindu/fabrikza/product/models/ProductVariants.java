@@ -20,19 +20,23 @@ public class ProductVariants {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "color_id", insertable = false, updatable = false)
+    @JoinColumn(name = "color_id")
     private Color color;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "size_id", insertable = false, updatable = false)
+    @JoinColumn(name = "size_id")
     private Size size;
+
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = true)
+    private Double price;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

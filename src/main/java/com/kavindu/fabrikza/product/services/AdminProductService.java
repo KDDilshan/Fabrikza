@@ -7,6 +7,7 @@ import com.kavindu.fabrikza.product.models.*;
 import com.kavindu.fabrikza.product.repositories.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,10 +33,17 @@ public class AdminProductService {
 
     public void addProduct(AddProductDto addProductDto) {
 
-        Category category = categoryRepository.findById(addProductDto.getCategory().getId())
+        Category category = categoryRepository.findById(addProductDto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        Product product=new Product();
+        Optional<Product> existing = productRepository
+                .findByNameAndCategory(addProductDto.getName(), category);
+
+        if (existing.isPresent()) {
+            throw new RuntimeException("Duplicate product: same name already exists in this category.");
+        }
+
+        Product product = new Product();
         product.setName(addProductDto.getName());
         product.setDescription(addProductDto.getDescription());
         product.setManufacturer(addProductDto.getManufacturer());
@@ -44,48 +52,32 @@ public class AdminProductService {
 
         Product savedProduct = productRepository.save(product);
 
-        for(ProductColorDTO colorDTO:addProductDto.getColors()){
-            Color color= productColorRepository
-                    .findByNameIgnoreCaseAndHexCode(colorDTO.getColorName(),colorDTO.getHexCode())
-                    .orElse(null);
-
-            if(color == null ){
-                color=new Color();
-                color.setName(colorDTO.getColorName());
-                color.setHexCode(colorDTO.getHexCode());
-                color=productColorRepository.save(color);
-            }
+        for (ProductColorDTO colorDTO : addProductDto.getColors()) {
+            // Fetch color by ID directly
+            Color color = productColorRepository.findById(colorDTO.getColorId())
+                    .orElseThrow(() -> new RuntimeException("Color not found"));
 
             for (ProductImageDTO imageDto : colorDTO.getImages()) {
                 ProductImage productImage = new ProductImage();
                 productImage.setUrl(imageDto.getUrl());
-                productImage.setProduct(product);
+                productImage.setProduct(savedProduct);
                 productImage.setColor(color);
-
                 productImageRepository.save(productImage);
             }
 
-            for(ProductVariantDTO variantDTO: colorDTO.getVariants()){
-                Size size = productSizeRepository.findByLabel(variantDTO.getSizeLabel())
-                        .orElse(null);
-
-                if (size == null) {
-                    size = new Size();
-                    size.setLabel(variantDTO.getSizeLabel());
-                    size = productSizeRepository.save(size);
-                }
+            for (ProductVariantDTO variantDTO : colorDTO.getVariants()) {
+                // Fetch size by ID directly
+                Size size = productSizeRepository.findById(variantDTO.getSizeId())
+                        .orElseThrow(() -> new RuntimeException("Size not found"));
 
                 ProductVariants variant = new ProductVariants();
-                variant.setProduct(product);
+                variant.setProduct(savedProduct);
                 variant.setColor(color);
                 variant.setSize(size);
                 variant.setQuantity(variantDTO.getQuantity());
                 productVariantsRepository.save(variant);
-
             }
-
         }
-
     }
 
     public ProductResponseDTO updateProduct(UUID id, UpdateProductDto updateDto) {
