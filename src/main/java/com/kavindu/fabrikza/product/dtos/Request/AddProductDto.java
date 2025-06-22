@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,10 +18,8 @@ public class AddProductDto {
     private String description;
     private Double price;
     private String manufacturer;
-    private Category category;
-    private List<ProductColorDTO> colors;
-
-
+    private int categoryId;
+    private List<ProductColorDTO> colors=new ArrayList<>();
 }
 
 

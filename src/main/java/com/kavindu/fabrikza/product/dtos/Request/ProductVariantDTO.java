@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductVariantDTO {
-    private String sizeLabel;
-    private Integer quantity;
+    private int sizeId;
+    private int quantity;
 }
