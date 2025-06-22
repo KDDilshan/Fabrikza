@@ -2,6 +2,7 @@ package com.kavindu.fabrikza.product.controllers;
 
 import com.kavindu.fabrikza.product.dtos.Request.AddProductDto;
 import com.kavindu.fabrikza.product.dtos.Request.UpdateProductDto;
+import com.kavindu.fabrikza.product.dtos.Response.ProductDetailDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductListResponseDTO;
 import com.kavindu.fabrikza.product.dtos.Response.ProductResponseDTO;
 import com.kavindu.fabrikza.product.mapper.ProductMapper;
