@@ -3,14 +3,17 @@ package com.kavindu.fabrikza.cart.services;
 import com.kavindu.fabrikza.Authentication.models.AppUser;
 import com.kavindu.fabrikza.Authentication.repositories.UserRepository;
 import com.kavindu.fabrikza.cart.dto.request.AddToCartDto;
+import com.kavindu.fabrikza.cart.dto.response.CartItemResponseDTO;
 import com.kavindu.fabrikza.cart.model.Cart;
 import com.kavindu.fabrikza.cart.model.CartItem;
 import com.kavindu.fabrikza.cart.repositories.CartItemRepository;
 import com.kavindu.fabrikza.cart.repositories.CartRepository;
 import com.kavindu.fabrikza.product.models.Color;
 import com.kavindu.fabrikza.product.models.Product;
+import com.kavindu.fabrikza.product.models.ProductImage;
 import com.kavindu.fabrikza.product.models.Size;
 import com.kavindu.fabrikza.product.repositories.ProductColorRepository;
+import com.kavindu.fabrikza.product.repositories.ProductImageRepository;
 import com.kavindu.fabrikza.product.repositories.ProductRepository;
 import com.kavindu.fabrikza.product.repositories.ProductSizeRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -27,15 +31,16 @@ public class CartService {
     private final ProductRepository productRepository;
     private final ProductColorRepository colorRepository;
     private final ProductSizeRepository sizeRepository;
+    private final ProductImageRepository productImageRepository;
 
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, UserRepository userRepository, ProductRepository productRepository, ProductColorRepository colorRepository, ProductSizeRepository sizeRepository) {
+    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, UserRepository userRepository, ProductRepository productRepository, ProductColorRepository colorRepository, ProductSizeRepository sizeRepository, ProductImageRepository productImageRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.colorRepository = colorRepository;
         this.sizeRepository = sizeRepository;
-
+        this.productImageRepository = productImageRepository;
     }
 
 
@@ -78,10 +83,27 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    public List<CartItem> getUserCart(int userId) {
-        return cartRepository.findByUserId(userId)
-                .map(Cart::getItems)
-                .orElse(Collections.emptyList());
+    public List<CartItemResponseDTO> getUserCart(int userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        return cart.getItems().stream().map(item -> {
+            ProductImage image = productImageRepository
+                    .findFirstByProductIdAndColorId(item.getProduct().getId(), item.getColor().getId())
+                    .orElse(null);
+
+            CartItemResponseDTO dto = new CartItemResponseDTO();
+            dto.setCartItemId(item.getId());
+            dto.setProductId(item.getProduct().getId());
+            dto.setProductName(item.getProduct().getName());
+            dto.setColorName(item.getColor().getName());
+            dto.setSizeLabel(item.getSize().getLabel());
+            dto.setQuantity(item.getQuantity());
+            dto.setPrice(item.getProduct().getPrice());
+            dto.setImageUrl(image != null ? image.getUrl() : null);
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 
 
