@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .addFilterBefore(new CorsFilter(corsConfigurationSource()),UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/product/v1/**").permitAll()
                 )
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
