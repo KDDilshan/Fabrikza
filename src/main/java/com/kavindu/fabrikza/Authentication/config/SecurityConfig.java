@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/product/v1/**").permitAll()
+                        .requestMatchers("/api/cart/v1/**").permitAll()
                 )
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
