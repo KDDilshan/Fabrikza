@@ -34,6 +34,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/product/v1/**").permitAll()
                         .requestMatchers("/api/cart/v1/**").permitAll()
+                        .requestMatchers("/api/payment/v1/**").permitAll()
+                        .requestMatchers("/api/orders/v1/**").permitAll()
                 )
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
