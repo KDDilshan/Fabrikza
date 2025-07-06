@@ -1,13 +1,16 @@
 package com.kavindu.fabrikza.Authentication.controllers;
 
 import com.kavindu.fabrikza.Authentication.Dto.Request.*;
+import com.kavindu.fabrikza.Authentication.Dto.Response.AuthResponse;
 import com.kavindu.fabrikza.Authentication.Dto.Response.UserProfileResponse;
 import com.kavindu.fabrikza.Authentication.models.AppUser;
 import com.kavindu.fabrikza.Authentication.services.ImageHandlingUserService;
 import com.kavindu.fabrikza.Authentication.services.JwtService;
 import com.kavindu.fabrikza.Authentication.services.UpdateUserService;
 import com.kavindu.fabrikza.Authentication.services.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -49,9 +52,24 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> LoginUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> LoginUser(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         try{
-            return ResponseEntity.ok(userService.loginUser(loginDto));
+            AuthResponse auth = userService.loginUser(loginDto);
+
+            Cookie refreshCookie = new Cookie("refreshToken", auth.getRefreshToken());
+            refreshCookie.setHttpOnly(true);
+            refreshCookie.setSecure(true);
+            refreshCookie.setPath("/");
+            refreshCookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(refreshCookie);
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("accessToken", auth.getToken());
+            body.put("username", auth.getUsername());
+            body.put("roles", auth.getRoles());
+
+            return ResponseEntity.ok(body);
+
         }catch (Exception e){
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
