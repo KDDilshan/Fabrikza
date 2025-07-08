@@ -27,6 +27,4 @@ public interface ProductRepository  extends JpaRepository<Product, UUID> {
     List<Product> searchByName(@Param("query") String query);
 
     Optional<Product> findByNameAndCategory(String name, Category category);
-
-
 }
